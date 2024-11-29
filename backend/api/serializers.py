@@ -30,8 +30,8 @@ class UserSerializer(serializers.ModelSerializer):
 class ItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = Item
-        fields = ['id', 'name', 'description', 'quantity', 'is_available_for_trade', 'image', 'category']
-        read_only_fields = ['id', 'organization']  # A organização será preenchida automaticamente
+        fields = ['id', 'name', 'description', 'quantity', 'is_available_for_trade', 'image', 'category', 'organization']
+        read_only_fields = ['id']
 
     def validate_quantity(self, value):
         if value < 1:
@@ -48,10 +48,10 @@ class TradeProposalSerializer(serializers.ModelSerializer):
         model = TradeProposal
         fields = [
             'id', 'sender_organization', 'receiver_organization', 
-            'sender_user', 'receiver_user', 'items_sent', 
-            'items_requested', 'status', 'created_at', 'updated_at'
+            'sent_by', 'accepted_by', 'status', 'items_sent', 
+            'items_requested', 'created_at', 'updated_at'
         ]
-        read_only_fields = ['id', 'status', 'sender_user', 'created_at', 'updated_at']
+        read_only_fields = ['id', 'created_at', 'updated_at']
 
     def validate(self, data):
         # Validar que a organização emissora pertence ao usuário
@@ -64,14 +64,13 @@ class TradeProposalSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("A organização destinatária deve ser diferente da organização emissora.")
 
         return data
-    
+
+
 class TradeProposalActionSerializer(serializers.Serializer):
     action = serializers.ChoiceField(choices=['accept', 'reject'])
 
     def validate(self, data):
         proposal = self.context['proposal']
-        if proposal.status != 'pending':
-            raise serializers.ValidationError("A proposta já foi processada.")
         return data
 
 class MembershipRequestSerializer(serializers.ModelSerializer):
@@ -94,3 +93,17 @@ class MembershipRequestSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Você já possui este cargo nesta organização.")
 
         return data
+
+class OrganizationDetailSerializer(serializers.ModelSerializer):
+    items = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Organization
+        fields = ['id', 'name', 'items']
+
+    def get_items(self, obj):
+        # Obtém a organização do usuário logado
+        # Busca os itens pertencentes à organização
+        items = Item.objects.filter(organization=obj,is_available_for_trade=True)
+        return [{'name': item.name, 'description': item.description} for item in items]
+
