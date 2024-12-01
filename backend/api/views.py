@@ -251,3 +251,12 @@ class ItemsExcludeUserOrganizationView(ListAPIView):
 
         # Filtra itens que não pertencem à organização do usuário
         return Item.objects.filter(is_available_for_trade=True).exclude(organization=user_organization)
+    
+class UserInfoView(APIView):
+    permission_classes = [IsAuthenticated]  # Garante que apenas usuários autenticados acessem
+
+    def get(self, request):
+        # Obter o usuário autenticado
+        user = request.user
+        serializer = UserSerializer(user)
+        return Response(serializer.data)
