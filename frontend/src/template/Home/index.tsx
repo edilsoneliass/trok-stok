@@ -1,5 +1,5 @@
-import ToolsLogo from 'components/ToolsLogo';
 import { useRouter } from 'next/router';
+import ToolsLogo from 'components/ToolsLogo';
 import * as S from './styles';
 
 const HomeTemplate = () => {

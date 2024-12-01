@@ -57,6 +57,24 @@ export const MainDiv = styled.div`
     align-items: center;
     justify-content: space-around;
     padding: 5% 10%;
+    overflow-y: auto;
+
+    ::-webkit-scrollbar {
+        width: 12px; /* Width of the scrollbar */
+    }
+
+    ::-webkit-scrollbar-track {
+        background: transparent; /* Track background */
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background-color: ${defaultTheme.colors.primary.main};
+        border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background-color: ${defaultTheme.colors.primary.dark};
+    }
 `;
 
 export const InputDiv = styled.div`

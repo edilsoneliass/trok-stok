@@ -12,29 +12,36 @@ interface ILoginRequest {
     password: string;
 }
 
+interface ILoginResponse {
+    access: string;
+    refresh: string;
+}
+
 interface AuthContextData {
     user: User;
-    login: (data: ILoginRequest) => void;
+    login: (data: ILoginRequest) => Promise<ILoginResponse>;
     logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
 export const AuthProvider: React.FC = ({ children }) => {
-    const [user, setUser] = useState({} as User);
+    const [user] = useState({} as User);
 
-    const login = async (data: ILoginRequest) => {
+    const login = async (data: ILoginRequest): Promise<ILoginResponse> => {
         try {
             const response = await UserService.login(data);
 
             api.defaults.headers.common = {
-                Authorization: `Bearer ${response.token}`
+                Authorization: `Bearer ${response.access}`
             };
 
-            setUser(response.user);
+            // setUser(response.user);
+            return response;
         } catch (error) {
-            // Errors handling
+            throw new Error('erro no login');
         }
+        return { access: '', refresh: '' };
     };
 
     const logout = () => {

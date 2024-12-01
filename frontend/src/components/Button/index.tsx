@@ -23,7 +23,9 @@ const BaseButton: React.FC<Props> = ({ color = 'primary', ...props }) => {
                 color: 'white',
                 '&:hover': {
                     backgroundColor: borderColor.dark
-                }
+                },
+                fontFamily: 'Poppins Regular',
+                textTransform: 'none'
             }}
         />
     );

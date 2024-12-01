@@ -9,73 +9,116 @@ export const Title = styled.h1`
     text-align: left;
 `;
 
+export const Header = styled.div`
+    height: 100px;
+    width: 100%;
+    background-color: red;
+`;
+
 export const Container = styled.div`
     display: flex;
     height: 100vh;
-    flex-direction: row;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     background-color: ${defaultTheme.colors.secondary.main};
-`;
-
-export const TitleDiv = styled.div`
-    display: flex;
     flex: 1;
-    height: 100%;
-    align-items: center;
-    justify-content: center;
 `;
 
-export const LogoDiv = styled.div`
+export const BgContainer = styled.div`
     display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 60%;
+    height: 100vh;
+    flex-direction: row;
+    background-color: ${defaultTheme.colors.secondary.main};
 `;
 
-export const LogoImg = styled.img`
+export const SafeArea = styled.div`
+    display: flex;
     width: 100%;
-`;
-
-export const TitleContainer = styled.div`
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 95%;
-    height: 95%;
-    background-color: orange;
-    border-radius: 12px;
-    background-image: url('/images/ToolsBg.png');
-`;
-
-export const MainDiv = styled.div`
-    display: flex;
     flex-direction: column;
-    flex: 1;
+    padding: 2%;
+    gap: 32px;
+    flex-grow: 1;
+    overflow-y: auto;
+`;
+
+export const ContentDivs = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    padding-top: 32px;
     height: 100%;
-    align-items: center;
-    justify-content: space-around;
-    padding: 5% 10%;
+    overflow: auto;
 `;
 
-export const InputDiv = styled.div`
+export const ItemsDiv = styled.div`
     display: flex;
     flex-direction: column;
-    width: 100%;
-    height: fit-content;
     align-items: center;
-    justify-content: center;
-    gap: 16px;
+    justify-content: flex-start;
     flex: 1;
+    overflow-y: auto;
+    height: 100%;
+    ::-webkit-scrollbar {
+        width: 12px; /* Width of the scrollbar */
+    }
+
+    ::-webkit-scrollbar-track {
+        background: transparent; /* Track background */
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background-color: ${defaultTheme.colors.primary.main};
+        border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background-color: ${defaultTheme.colors.primary.dark};
+    }
 `;
 
-export const ButtonDiv = styled.div`
+export const ProposalDiv = styled.div`
     display: flex;
     flex-direction: column;
-    width: 50%;
-    height: fit-content;
+    align-items: center;
+    justify-content: flex-start;
+    flex: 1;
+    overflow-y: auto;
+    height: 100%;
+    ::-webkit-scrollbar {
+        width: 12px; /* Width of the scrollbar */
+    }
+
+    ::-webkit-scrollbar-track {
+        background: transparent; /* Track background */
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background-color: ${defaultTheme.colors.primary.main};
+        border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background-color: ${defaultTheme.colors.primary.dark};
+    }
+`;
+
+export const ButtonsWrapper = styled.div`
+    width: 100%;
+    display: flex;
+    flex-direction: row;
     align-items: center;
     justify-content: center;
-    gap: 16px;
-    margin: 24px;
+    gap: 8px;
+    padding: 8px 16px;
+`;
+
+export const CardsWrapper = styled.div`
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 8px 16px;
 `;

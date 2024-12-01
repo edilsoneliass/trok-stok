@@ -2,14 +2,15 @@ import * as S from './styles';
 
 type LinedTextProps = {
     children: React.ReactNode;
+    color?: 'white' | 'black';
 };
 
-const LinedText = ({ children }: LinedTextProps) => {
+const LinedText: React.FC<LinedTextProps> = ({ children, color }) => {
     return (
-        <S.TextContainer>
-            <S.Line />
+        <S.TextContainer color={color || 'white'}>
+            <S.Line color={color || 'white'} />
             <S.Text>{children}</S.Text>
-            <S.Line />
+            <S.Line color={color || 'white'} />
         </S.TextContainer>
     );
 };

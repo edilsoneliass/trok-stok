@@ -1,4 +1,4 @@
-import TextInput, { SelectInput } from 'components/Inputs';
+import { SelectInput } from 'components/Inputs';
 import BaseButton from 'components/Button';
 import ToolsLogo from 'components/ToolsLogo';
 import { useRouter } from 'next/router';
@@ -19,9 +19,9 @@ const EnterOrganizationTemplate = () => {
                     <LinedText>Entrar em Organização</LinedText>
                     <SelectInput
                         itens={[
-                            { name: 'oi', value: '1' },
-                            { name: 'Salve Edolas', value: '2' },
-                            { name: 'Vigura', value: '3' }
+                            { name: 'Laboratório 1', value: '1' },
+                            { name: 'Thunder Ratz', value: '2' },
+                            { name: 'Poli Júnior', value: '3' }
                         ]}
                         label="Escolha sua Organização"
                         onChange={() => {
@@ -29,10 +29,16 @@ const EnterOrganizationTemplate = () => {
                             console.log('selected');
                         }}
                     />
-                    <TextInput
-                        fullWidth
-                        label="Cargo de entrada"
-                        placeholder="Membro"
+                    <SelectInput
+                        itens={[
+                            { name: 'Membro', value: '1' },
+                            { name: 'Líder', value: '2' }
+                        ]}
+                        label="Cargo de Entrada"
+                        onChange={() => {
+                            // eslint-disable-next-line no-console
+                            console.log('selected');
+                        }}
                     />
                     <S.ButtonDiv>
                         <BaseButton

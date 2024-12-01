@@ -51,6 +51,23 @@ export const GlobalStyles = createGlobalStyle`
         box-sizing: border-box;
     }
     html{
-        font-family: 'Poppins Regular'
+        font-family: 'Poppins Regular';
+        ::-webkit-scrollbar {
+            width: 12px; /* Width of the scrollbar */
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1; /* Track background */
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background-color: #888; /* Thumb color */
+            border-radius: 10px; /* Rounded corners */
+            border: 3px solid #f1f1f1; /* Adds padding with track color */
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background-color: #555; /* Thumb color on hover */
+        }
     }
 `;
