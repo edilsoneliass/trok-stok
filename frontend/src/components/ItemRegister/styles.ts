@@ -28,7 +28,7 @@ export const Container = styled.div`
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background-color: ${defaultTheme.colors.offWhite};
+    background-color: ${defaultTheme.colors.offWhite.main};
     border-radius: 4px;
     z-index: 2;
     box-shadow: 0px 0px 3px black;

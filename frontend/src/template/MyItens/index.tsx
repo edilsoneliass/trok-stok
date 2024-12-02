@@ -4,13 +4,31 @@ import BaseButton from 'components/Button';
 import TextCard from 'components/Card';
 import Header from 'components/Header';
 import SideBar from 'components/SideBar';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import CreateItem from 'components/ItemRegister';
+import Item from 'interfaces/Item';
+import OrganizationService from 'services/OrganizationService';
 import * as S from './styles';
 
 const MyItensTemplate = () => {
     const [sideBar, setSideBar] = useState(false);
     const [register, setRegister] = useState(false);
+
+    const [items, setItems] = useState<Item[]>();
+
+    const getItems = async () => {
+        try {
+            const reqItems = await OrganizationService.getOrganizationItems();
+            setItems(reqItems.items);
+        } catch (error) {
+            // eslint-disable-next-line no-console
+            console.log('erro ao receber os itens da organização');
+        }
+    };
+
+    useEffect(() => {
+        getItems();
+    }, []);
 
     return (
         <S.BgContainer>
@@ -59,18 +77,12 @@ const MyItensTemplate = () => {
                         </BaseButton>
                     </S.ButtonContainer>
                     <S.CardsWrapper>
-                        <TextCard
-                            title="Parafuso M1"
-                            detail="Quantidade: 15 unidades"
-                        />
-                        <TextCard
-                            title="Porca"
-                            detail="Quantidade: 15 unidades"
-                        />
-                        <TextCard
-                            title="Cafeteira"
-                            detail="Quantidade: 15 unidades"
-                        />
+                        {items?.map((item) => (
+                            <TextCard
+                                title={item.name}
+                                detail={`Quantidade: ${item.quantity?.toString()} unidades`}
+                            />
+                        ))}
                     </S.CardsWrapper>
                 </S.SafeArea>
             </S.Container>

@@ -2,6 +2,7 @@
 import { AxiosResponse } from 'axios';
 import { parseCookies, setCookie } from 'nookies';
 
+import User from 'interfaces/User';
 import api from './api';
 
 interface ILoginRequest {
@@ -71,6 +72,19 @@ export default class UserService {
                 }
             }
         );
+
+        return response.data;
+    }
+
+    static async getUser(): Promise<User> {
+        const cookies = parseCookies();
+        const token = cookies['@trok_stok: access'];
+
+        const response: AxiosResponse = await api.get('user-info/', {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
 
         return response.data;
     }

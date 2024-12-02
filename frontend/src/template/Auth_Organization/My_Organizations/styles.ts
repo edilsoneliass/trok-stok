@@ -10,6 +10,14 @@ export const Title = styled.h1`
     margin-bottom: 40px;
 `;
 
+export const Text = styled.p`
+    font-size: 20px;
+    font-family: 'Poppins Regular';
+    color: white;
+    width: 100%;
+    text-align: center;
+`;
+
 export const Container = styled.div`
     display: flex;
     height: 100vh;

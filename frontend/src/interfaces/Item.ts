@@ -1,11 +1,11 @@
-import Organization from './Organization';
-
 export default interface Item {
-    id: string;
+    id: number;
     name: string;
     description: string;
-    amount?: number;
-    available?: boolean;
+    quantity?: number;
+    // eslint-disable-next-line camelcase
+    is_available_for_trade?: boolean;
     image?: string;
-    organization?: Organization;
+    category: number;
+    organization?: number;
 }

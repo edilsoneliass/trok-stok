@@ -1,12 +1,8 @@
-import Organization from './Organization';
-
 export default interface User {
-    id: string;
-    name: string;
+    id: number;
+    // eslint-disable-next-line camelcase
+    full_name: string;
     email: string;
-    password: string;
-    phone: string;
-    organizations: Organization[];
-    type: string;
-    image: string;
+    organization?: number;
+    role?: string;
 }

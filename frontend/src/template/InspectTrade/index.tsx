@@ -14,37 +14,43 @@ const InspectTradeTemplate = () => {
 
     const [myItens] = useState<Item[]>([
         {
-            id: '1',
+            id: 1,
             name: 'Notebook',
-            description: 'Computador portátil para trabalho diário'
+            description: 'Computador portátil para trabalho diário',
+            category: 1
         },
         {
-            id: '2',
+            id: 2,
             name: 'Celular',
-            description: 'Dispositivo móvel com acesso à internet'
+            description: 'Dispositivo móvel com acesso à internet',
+            category: 1
         },
         {
-            id: '3',
+            id: 3,
             name: 'Caderno',
-            description: 'Útil para anotações e estudos rápidos'
+            description: 'Útil para anotações e estudos rápidos',
+            category: 1
         }
     ]);
 
     const [externalItems] = useState<Item[]>([
         {
-            id: '4',
+            id: 4,
             name: 'Tablet',
-            description: 'Dispositivo compacto para leitura e navegação'
+            description: 'Dispositivo compacto para leitura e navegação',
+            category: 1
         },
         {
-            id: '5',
+            id: 5,
             name: 'Relógio inteligente',
-            description: 'Monitora atividades e exibe notificações'
+            description: 'Monitora atividades e exibe notificações',
+            category: 1
         },
         {
-            id: '6',
+            id: 6,
             name: 'Câmera digital',
-            description: 'Captura fotos e vídeos em alta resolução'
+            description: 'Captura fotos e vídeos em alta resolução',
+            category: 1
         }
     ]);
 

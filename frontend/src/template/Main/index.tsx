@@ -5,12 +5,30 @@ import BaseButton from 'components/Button';
 import TextCard, { TradeCard } from 'components/Card';
 import Header from 'components/Header';
 import SideBar from 'components/SideBar';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import Item from 'interfaces/Item';
+import OrganizationService from 'services/OrganizationService';
 import * as S from './styles';
 
 const MainTemplate = () => {
     const router = useRouter();
     const [sideBar, setSideBar] = useState(false);
+
+    const [items, setItems] = useState<Item[]>();
+
+    const getItems = async () => {
+        try {
+            const reqItems = await OrganizationService.getOrganizationItems();
+            setItems(reqItems.items);
+        } catch (error) {
+            // eslint-disable-next-line no-console
+            console.log('erro ao receber os itens da organização');
+        }
+    };
+
+    useEffect(() => {
+        getItems();
+    }, []);
 
     return (
         <S.BgContainer>
@@ -49,34 +67,12 @@ const MainTemplate = () => {
                                 </BaseButton>
                             </S.ButtonsWrapper>
                             <S.CardsWrapper>
-                                <TextCard
-                                    title="Parafuso M1"
-                                    detail="Quantidade: 15 unidades"
-                                />
-                                <TextCard
-                                    title="Parafuso M1"
-                                    detail="Quantidade: 15 unidades"
-                                />
-                                <TextCard
-                                    title="Parafuso M1"
-                                    detail="Quantidade: 15 unidades"
-                                />
-                                <TextCard
-                                    title="Parafuso M1"
-                                    detail="Quantidade: 15 unidades"
-                                />
-                                <TextCard
-                                    title="Parafuso M1"
-                                    detail="Quantidade: 15 unidades"
-                                />
-                                <TextCard
-                                    title="Parafuso M1"
-                                    detail="Quantidade: 15 unidades"
-                                />
-                                <TextCard
-                                    title="Parafuso M1"
-                                    detail="Quantidade: 15 unidades"
-                                />
+                                {items?.map((item) => (
+                                    <TextCard
+                                        title={item.name}
+                                        detail={`Quantidade: ${item.quantity?.toString()} unidades`}
+                                    />
+                                ))}
                             </S.CardsWrapper>
                         </S.ItemsDiv>
                         <S.ProposalDiv>

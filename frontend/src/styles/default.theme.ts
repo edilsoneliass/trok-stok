@@ -10,7 +10,11 @@ export const defaultTheme = {
             main: '#403D39',
             dark: '#2F2D2B'
         },
-        offWhite: '#FFFCF2'
+        offWhite: {
+            main: '#FFFCF2',
+            light: '#FFFCF2',
+            dark: '#FFFCF2'
+        }
     },
     space: [4, 8, 12, 16, 24, 32, 48, 64, 96, 128, 192, 256],
     radii: {
