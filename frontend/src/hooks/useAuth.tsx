@@ -41,7 +41,6 @@ export const AuthProvider: React.FC = ({ children }) => {
         } catch (error) {
             throw new Error('erro no login');
         }
-        return { access: '', refresh: '' };
     };
 
     const logout = () => {

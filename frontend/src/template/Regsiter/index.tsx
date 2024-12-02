@@ -1,3 +1,4 @@
+/* eslint-disable no-alert */
 import TextInput from 'components/Inputs';
 import BaseButton, { TextButton } from 'components/Button';
 import ToolsLogo from 'components/ToolsLogo';
@@ -5,6 +6,7 @@ import { useRouter } from 'next/router';
 import LinedText from 'components/Text';
 import { useState } from 'react';
 import UserService from 'services/UserService';
+import useAuth from 'hooks/useAuth';
 import * as S from './styles';
 
 const RegisterTemplate = () => {
@@ -14,6 +16,19 @@ const RegisterTemplate = () => {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
 
+    const { login } = useAuth();
+
+    const handleLogin = async () => {
+        try {
+            await login({ email, password });
+            alert('Login successful!');
+            router.push('/org_auth/enter');
+        } catch (error) {
+            alert('Login failed. Please try again.');
+            router.push('/login');
+        }
+    };
+
     const handleRegister = async () => {
         try {
             await UserService.register({
@@ -22,10 +37,10 @@ const RegisterTemplate = () => {
                 password,
                 confirm_password: confirmPassword
             });
-            router.push('/org_auth/enter');
+            await handleLogin();
         } catch (err) {
             // eslint-disable-next-line no-console
-            console.log(`erro: ${err}`);
+            console.log(`erro no cadastro: ${err}`);
         }
     };
 
