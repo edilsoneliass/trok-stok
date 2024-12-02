@@ -55,7 +55,7 @@ export type SelectInputProps = SelectProps & {
 };
 
 type MenuItem = {
-    value: string;
+    value: number | string;
     name: string;
 };
 

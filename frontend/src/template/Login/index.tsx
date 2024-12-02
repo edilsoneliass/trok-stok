@@ -22,7 +22,6 @@ const LoginTemplate = () => {
             router.push('/org_auth/my_organizations');
         } catch (error) {
             alert('Login failed. Please try again.');
-            router.push('/org_auth/my_organizations');
         }
     };
 
