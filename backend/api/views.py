@@ -1,12 +1,14 @@
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.generics import ListAPIView
+from rest_framework.generics import ListAPIView, RetrieveAPIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
 from .models import Organization, User, Item, Category, TradeProposal, MembershipRequest
-from .serializers import UserSerializer, OrganizationSerializer, ItemSerializer, MembershipRequestSerializer, TradeProposalSerializer, TradeProposalActionSerializer, CategorySerializer
+from .serializers import UserSerializer, OrganizationSerializer, ItemSerializer, MembershipRequestSerializer, TradeProposalSerializer, TradeProposalActionSerializer, CategorySerializer, OrganizationDetailSerializer
+from rest_framework.filters import OrderingFilter
+from django_filters.rest_framework import DjangoFilterBackend
 
 # View para login (autenticação)
 class LoginView(APIView):
@@ -123,7 +125,7 @@ class ApproveMembershipRequestView(APIView):
             membership_request = MembershipRequest.objects.get(id=request_id)
 
             # Verifica se o usuário é capitão da organização
-            if request.user.role != 'capitao' or request.user.organization != membership_request.organization:
+            if request.user.role != 'capitão' or request.user.organization != membership_request.organization:
                 return Response({"detail": "Você não tem permissão para aprovar essa solicitação."}, status=status.HTTP_403_FORBIDDEN)
 
             # Atualiza o status da solicitação
@@ -150,9 +152,8 @@ class TradeProposalCreateView(APIView):
     def post(self, request):
         # Adiciona o usuário autenticado como remetente da proposta
         data = request.data.copy()
-        data['sender_user'] = request.user.id
+        data['sent_by'] = request.user.id
         data['sender_organization'] = request.user.organization.id
-
         serializer = TradeProposalSerializer(data=data, context={'request': request})
         if serializer.is_valid():
             serializer.save()
@@ -171,6 +172,11 @@ class TradeProposalActionView(APIView):
 
         # Verifica se o usuário pertence à organização destinatária
         if request.user.organization != proposal.receiver_organization:
+            print(request.user.organization)
+            return Response({'error': 'Você não tem permissão para processar esta proposta.'}, status=status.HTTP_403_FORBIDDEN)
+        
+        if request.user.role != 'capitão':
+            print(request.user.role)
             return Response({'error': 'Você não tem permissão para processar esta proposta.'}, status=status.HTTP_403_FORBIDDEN)
 
         serializer = TradeProposalActionSerializer(data=request.data, context={'proposal': proposal})
@@ -191,3 +197,66 @@ class TradeProposalActionView(APIView):
 class CategoryListView(ListAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
+
+class OrganizationDetailView(RetrieveAPIView):
+    queryset = Organization.objects.all()
+    serializer_class = OrganizationDetailSerializer
+
+class TradeProposalListView(ListAPIView):
+    queryset = TradeProposal.objects.all()
+    serializer_class = TradeProposalSerializer
+    filter_backends = [DjangoFilterBackend, OrderingFilter]
+    filterset_fields = ['sender_organization', 'receiver_organization', 'status']
+    ordering_fields = ['created_at']
+    ordering = ['-created_at']
+
+class DeleteItemView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request, item_id):
+        try:
+            # Busca o item pelo ID
+            item = Item.objects.get(id=item_id)
+        except Item.DoesNotExist:
+            return Response({'error': 'Item não encontrado.'}, status=status.HTTP_404_NOT_FOUND)
+
+        # Verifica se o usuário pertence à organização do item
+        if request.user.organization != item.organization:
+            return Response({'error': 'Você não tem permissão para deletar este item.'}, status=status.HTTP_403_FORBIDDEN)
+
+        # Deleta o item
+        item.delete()
+        return Response({'message': f'Item "{item.name}" deletado com sucesso.'}, status=status.HTTP_200_OK)
+
+class OrganizationMembersView(ListAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = UserSerializer
+
+    def get_queryset(self):
+        # Recupera o ID da organização a partir dos parâmetros da URL
+        organization_id = self.kwargs.get('organization_id')
+        if not organization_id:
+            return User.objects.none()
+
+        # Filtra os usuários que pertencem à organização especificada
+        return User.objects.filter(organization_id=organization_id)
+
+class ItemsExcludeUserOrganizationView(ListAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = ItemSerializer
+
+    def get_queryset(self):
+        # Recupera a organização do usuário autenticado
+        user_organization = self.request.user.organization
+
+        # Filtra itens que não pertencem à organização do usuário
+        return Item.objects.filter(is_available_for_trade=True).exclude(organization=user_organization)
+    
+class UserInfoView(APIView):
+    permission_classes = [IsAuthenticated]  # Garante que apenas usuários autenticados acessem
+
+    def get(self, request):
+        # Obter o usuário autenticado
+        user = request.user
+        serializer = UserSerializer(user)
+        return Response(serializer.data)

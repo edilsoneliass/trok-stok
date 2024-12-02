@@ -4,7 +4,6 @@ from django.db import models
 # Create your models here.
 class Organization(models.Model):
     name = models.CharField(max_length=100)
-    items = models.ManyToManyField('Item', blank=True)
 
     def __str__(self):
         return self.name
@@ -24,6 +23,7 @@ class Item(models.Model):
     is_available_for_trade = models.BooleanField(default=True)
     image = models.ImageField(upload_to='item_images/', blank=True, null=True)
     category = models.ForeignKey('Category', on_delete=models.CASCADE)
+    organization = models.ForeignKey('Organization', on_delete=models.CASCADE, related_name='items', null=True)
 
 class Category(models.Model):
     name = models.CharField(max_length=50)
@@ -40,9 +40,6 @@ class TradeProposal(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def accept_trade(self):
-        if self.status != 'pending':
-            raise ValueError("A proposta já foi processada.")
-        
         # Transfere os itens entre as organizações
         for item in self.items_sent.all():
             item.organization = self.receiver_organization
@@ -56,9 +53,6 @@ class TradeProposal(models.Model):
         self.save()
 
     def reject_trade(self):
-        if self.status != 'pending':
-            raise ValueError("A proposta já foi processada.")
-        
         self.status = 'rejected'
         self.save()
 
@@ -75,4 +69,6 @@ class MembershipRequest(models.Model):
 
     def __str__(self):
         return f"{self.user.email} -> {self.organization.name} ({self.requested_role})"
+    
+
     
